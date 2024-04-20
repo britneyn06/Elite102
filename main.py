@@ -69,7 +69,6 @@ def user_selection():
 
 def fetchCurrentBalance(username):
     mycursor.execute("SELECT currentBalance FROM Person WHERE username = %s", (username,))
-    print("Username:", username)
     result = mycursor.fetchone()
     if result:
         return result[0]  # Return the current balance
@@ -82,7 +81,6 @@ def updateCurrentBalance(username, new_balance):
 
 #Creates Function for making a transaction
 def makeTransaction(username):
-    print("Username:", username)
     print("Make a Transaction:")
     print("1. Deposit")
     print("2. Withdraw")
@@ -102,7 +100,6 @@ def makeTransaction(username):
     if transactionChoice == 1:
         money = Decimal(input("Enter the amount you want to deposit: $"))
         current_balance = fetchCurrentBalance(username)
-        print("Username:", username)
         #print("Current Balance:", current_balance) Debugging
         if current_balance is not None:
             new_balance = current_balance + money
@@ -306,7 +303,6 @@ if starting == 1:
         if user:
             print("Login successful!")
             login_success = True #Changes to true so it doesn't re-loop
-            print("Username:", username)
         else:
             print("Invalid username or password. Please try again.\n") #Prompts user again
 
@@ -326,7 +322,6 @@ else:
         if user:
             print("Login successful!")
             login_success = True #Changes to true so it doesn't re-loop
-            print("Username:", username)
         else:
             print("Invalid username or password. Please try again.\n") #Prompts user again
 
