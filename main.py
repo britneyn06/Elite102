@@ -16,6 +16,12 @@ mycursor = db.cursor()
 
 newQ1 = "INSERT INTO Person (username, email, password) VALUES (%s, %s, %s)"
 
+#Debugging
+#mycursor.execute("DESCRIBE Person")
+
+#for x in mycursor:
+    #print(x)
+
 #Add Testing Authorized User to Person Table
 #mycursor.execute("INSERT INTO Person (username, email, password) VALUES (%s, %s, %s)", ("authorized", "authorized@authorized.com", "authorized"))
 #db.commit()
@@ -94,6 +100,7 @@ def makeTransaction(username):
     if transactionChoice == 1:
         money = Decimal(input("Enter the amount you want to deposit: $"))
         current_balance = fetchCurrentBalance(username)
+        print("Current Balance:", current_balance)  # Add this line for debugging
         if current_balance is not None:
             new_balance = current_balance + money
             updateCurrentBalance(username, new_balance)
@@ -267,6 +274,22 @@ def accountSettings():
     else:
         print("Redirecting to home page.")
 
+def login():
+    login_success = False  #Tracks if login is successful
+    while not login_success:
+        username = input("Username: ")
+        password = input("Password: ")
+
+        # Query the database to check if the username and password match
+        mycursor.execute("SELECT * FROM Person WHERE username = %s AND password = %s", (username, password))
+        user = mycursor.fetchone()  # Fetches the first matching row
+    
+        if user:
+            print("Login successful!")
+            login_success = True #Changes to true so it doesn't re-loop
+        else:
+            print("Invalid username or password. Please try again.\n") #Prompts user again
+
 #Makes the user select to login to their account or sign up for one
 print("Welcome to Bank of America!")
 print("1. Login")
@@ -284,24 +307,12 @@ while starting != 1 and starting != 2:
 
 #Logs in to account
 if starting == 1:
-    login_success = False  #Tracks if login is successful
-    while not login_success:
-        username = input("Username: ")
-        password = input("Password: ")
-
-        # Query the database to check if the username and password match
-        mycursor.execute("SELECT * FROM Person WHERE username = %s AND password = %s", (username, password))
-        user = mycursor.fetchone()  # Fetches the first matching row
-    
-        if user:
-            print("Login successful!")
-            login_success = True #Changes to true so it doesn't re-loop
-        else:
-            print("Invalid username or password. Please try again.\n") #Prompts user again
+    login()
 
 #Creates New Account
 else:
     createAccount()
+    login()
 
 while program_loop:
     options()
